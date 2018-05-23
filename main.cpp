@@ -20,14 +20,57 @@ struct Data
 void TakeInf();
 Data CheckInf(Data d);
 
-void StudentMenu(Data d);
+//Admin function
+void ShowUser();
 
+//login run
+void StudentMenu(Data d);
+void TeacherMenu(Data d);
+void AdminMenu(Data d);
 
 
 //display function
 void AdminHelpMenu();
 void TeacherHelpMenu();
 void StudentHelpMenu();
+
+//need to fix, the error is when we print the final line of file
+void ShowInfo(char path[])
+{
+    ifstream file(path);
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string id;
+    string name;
+    string age;
+    string phone;
+    string address;
+
+    while(file.good())
+    {
+
+        getline(file, id, ',');
+        getline(file, name, ',');
+        getline(file, age, ',');
+        getline(file, phone, ',');
+        getline(file, address, '\n');
+
+        std::cout << "id: " << id << std::endl;
+        std::cout << "name: " << name << std::endl;
+        std::cout << "birth: " << age << std::endl;
+        std::cout << "phone: " << phone << std::endl;
+        std::cout << "address: " << address << std::endl;
+        std::cout << "-------------------" << '\n';
+    }
+
+    file.close();
+}
+
 
 int main()
 {
@@ -76,25 +119,28 @@ void TakeInf()
     d = CheckInf(d);
     if (d.role == "student")
     {
+        system("cls"); // windows.h
         std::cout << "Login as student\n";//1713253
         StudentMenu(d);
         Sleep(2000);
     }
     else if (d.role == "teacher")
     {
+        system("cls");
         std::cout << "Login as teacher\n";//S0951
-        TeacherHelpMenu();
+        TeacherMenu(d);
         Sleep(2000);
     }
     else if (d.role == "admin")
     {
+        system("cls");
         std::cout << "Login as admin\n";
-        AdminHelpMenu();
+        AdminMenu(d);
         Sleep(2000);
     }
     else
     {
-        std::cout << "Error try agian\n";
+        std::cout << "Error try again\n";
         Sleep(1000);
     }
 
@@ -139,14 +185,6 @@ Data CheckInf(Data d)
 
 void StudentMenu(Data s)
 {
-    /*std::cout << "1. Change password [p]        \n"
-              << "2. View my Coureses [c]       \n"
-              << "3. Search Course [scn]        \n"
-              << "4. Join Course [j]            \n"
-              << "5. Logout [l]                 \n"
-              << "6. Exit [q]                   \n"
-              << "7. Help? [h]                  \n" << std::endl;*/
-
     int num = 0;
 
     do
@@ -192,6 +230,163 @@ void StudentMenu(Data s)
     Sleep(10000);
 }
 
+//Code of VO Dong Ho
+void AdminMenu(Data d)
+{
+    int num = 0;
+
+    do
+    {
+        std::cout << "1. Show User              \n"
+                  << "2. Search User            \n"
+                  << "3. Add User               \n"
+                  << "4. Delete User [dt] [ds]  \n"
+                  << "5. Logout [l]             \n"
+                  << "6. Exit [q]               \n"
+                  << "7. Help?? [h]             \n" << std::endl;
+
+        std::cout << "Your number : ";
+        std::cin >> num;;
+        getchar();
+
+        switch(num)
+        {
+            case 1:
+                ShowUser();
+                break;
+            case 2:
+                //
+                break;
+            case 3:
+                //
+                break;
+            case 4:
+                //
+                break;
+            case 5:
+                //
+                return;
+            case 6:
+                //
+                exit(0);
+            case 7:
+                AdminHelpMenu();
+                break;
+            default:
+                std::cout << "try again\n";
+                break;
+        }
+
+    }
+    while(1);
+
+    system("cls");
+
+    Sleep(10000);
+
+}
+
+void TeacherMenu(Data d)
+{
+    int num = 0;
+
+    do
+    {
+        std::cout << "1. Change password [p]            \n"
+                  << "2. View my courses [c]            \n"
+                  << "3. Search courses [scn]           \n"
+                  << "4. Open course [o] [a]            \n"
+                  << "5. Summarize Score [s] [sum]      \n"
+                  << "6. Revise Score [r]               \n"
+                  << "7. Logout [l]                     \n"
+                  << "8. Exit [q]                       \n"
+                  << "9. Help?? [h]                     \n" << std::endl;
+        std::cout << "Your number : ";
+        std::cin >> num;
+        getchar();
+
+        switch(num)
+        {
+            case 1:
+                //
+                break;
+            case 2:
+                //
+                break;
+            case 3:
+                //
+                break;
+            case 4:
+                //
+                break;
+            case 5:
+                //
+                break;
+            case 6:
+                //
+                break;
+            case 7:
+                //
+                return;
+            case 8:
+                //
+                exit(0);
+            case 9:
+                TeacherHelpMenu();
+                break;
+            default:
+                std::cout << "Try again\n";
+                break;
+        }
+        system("cls");
+    }
+    while(1);
+
+    Sleep(10000);
+}
+//above
+
+//admin function
+void ShowUser()
+{
+    int num = 0;
+
+    do
+    {
+        std::cout << "1.Show all Faculties\n";
+        std::cout << "2.Show all Students\n";
+
+        std::cout << "Your number : ";
+        std::cin >> num;
+        getchar();
+
+        switch(num)
+        {
+            case 1:
+                ShowInfo("data\\teacher.csv");
+                return;
+
+            case 2:
+                ShowInfo("data\\student.csv");
+                return;
+
+            default :
+                std::cout << "Try again";
+                break;
+        }
+    }
+    while(1);
+
+    std::cout << '\n';
+}
+
+
+
+
+
+
+
+//Intruction Menu
 void AdminHelpMenu()
 {
     cout << "*Change Password            [p]   [passwd]\n"
@@ -250,3 +445,9 @@ void StudentHelpMenu()
     cout << "Press enter to continue ......";
     getchar();
 }
+
+
+
+
+
+
