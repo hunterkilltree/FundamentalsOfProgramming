@@ -1,3 +1,6 @@
+//next time
+//working with 2 functions that view the data of courses in teacher function and student fucntion
+
 #include <windows.h>
 #include <stdio.h>
 #include <iostream>
@@ -22,6 +25,10 @@ Data CheckInf(Data d);
 
 //Admin function
 void ShowUser();
+void ShowInfoTeacher(char path[]);//deprecated conversion from string
+void ShowInfoStudent(char path[]);
+
+
 
 //login run
 void StudentMenu(Data d);
@@ -34,42 +41,6 @@ void AdminHelpMenu();
 void TeacherHelpMenu();
 void StudentHelpMenu();
 
-//need to fix, the error is when we print the final line of file
-void ShowInfo(char path[])
-{
-    ifstream file(path);
-
-    if (!file.is_open())
-    {
-        std::cout << "ERROR: File Open" << '\n';
-        return;
-    }
-
-    string id;
-    string name;
-    string age;
-    string phone;
-    string address;
-
-    while(file.good())
-    {
-
-        getline(file, id, ',');
-        getline(file, name, ',');
-        getline(file, age, ',');
-        getline(file, phone, ',');
-        getline(file, address, '\n');
-
-        std::cout << "id: " << id << std::endl;
-        std::cout << "name: " << name << std::endl;
-        std::cout << "birth: " << age << std::endl;
-        std::cout << "phone: " << phone << std::endl;
-        std::cout << "address: " << address << std::endl;
-        std::cout << "-------------------" << '\n';
-    }
-
-    file.close();
-}
 
 
 int main()
@@ -122,21 +93,18 @@ void TakeInf()
         system("cls"); // windows.h
         std::cout << "Login as student\n";//1713253
         StudentMenu(d);
-        Sleep(2000);
     }
     else if (d.role == "teacher")
     {
         system("cls");
         std::cout << "Login as teacher\n";//S0951
         TeacherMenu(d);
-        Sleep(2000);
     }
     else if (d.role == "admin")
     {
         system("cls");
         std::cout << "Login as admin\n";
         AdminMenu(d);
-        Sleep(2000);
     }
     else
     {
@@ -226,8 +194,6 @@ void StudentMenu(Data s)
         system("cls");
     }
     while(1);
-
-    Sleep(10000);
 }
 
 //Code of VO Dong Ho
@@ -281,9 +247,6 @@ void AdminMenu(Data d)
     while(1);
 
     system("cls");
-
-    Sleep(10000);
-
 }
 
 void TeacherMenu(Data d)
@@ -341,8 +304,6 @@ void TeacherMenu(Data d)
         system("cls");
     }
     while(1);
-
-    Sleep(10000);
 }
 //above
 
@@ -363,11 +324,11 @@ void ShowUser()
         switch(num)
         {
             case 1:
-                ShowInfo("data\\teacher.csv");
+                ShowInfoTeacher("data\\teacher.csv");
                 return;
 
             case 2:
-                ShowInfo("data\\student.csv");
+                ShowInfoStudent("data\\student.csv");
                 return;
 
             default :
@@ -378,6 +339,84 @@ void ShowUser()
     while(1);
 
     std::cout << '\n';
+}
+
+void ShowInfoTeacher(char path[])
+{
+    ifstream file(path);
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string id;
+    string name;
+    string age;
+    string phone;
+    string address;
+
+    getline(file, id, ',');
+    getline(file, name, ',');
+    getline(file, age, ',');
+    getline(file, phone, ',');
+    getline(file, address, '\n');
+
+    while(file.good())
+    {
+        std::cout << "id: " << id << std::endl;
+        std::cout << "name: " << name << std::endl;
+        std::cout << "birth: " << age << std::endl;
+        std::cout << "phone: " << phone << std::endl;
+        std::cout << "address: " << address << std::endl;
+        std::cout << "-------------------" << '\n';
+
+        getline(file, id, ',');
+        getline(file, name, ',');
+        getline(file, age, ',');
+        getline(file, phone, ',');
+        getline(file, address, '\n');
+    }
+
+    file.close();
+}
+
+void ShowInfoStudent(char path[])
+{
+    ifstream file(path);
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string id;
+    string name;
+    string age;
+    string address;
+
+    getline(file, id, ',');
+    getline(file, name, ',');
+    getline(file, age, ',');
+    getline(file, address, '\n');
+
+    while(file.good())
+    {
+        std::cout << "id: " << id << std::endl;
+        std::cout << "name: " << name << std::endl;
+        std::cout << "birth: " << age << std::endl;
+        std::cout << "address: " << address << std::endl;
+        std::cout << "-------------------" << '\n';
+
+        getline(file, id, ',');
+        getline(file, name, ',');
+        getline(file, age, ',');
+        getline(file, address, '\n');
+    }
+
+    file.close();
 }
 
 
