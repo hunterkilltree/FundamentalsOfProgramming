@@ -1,5 +1,5 @@
 //next time
-//working with 2 functions that view the data of courses in teacher function and student fucntion
+//working with admin funtion that will add user
 
 #include <windows.h>
 #include <stdio.h>
@@ -28,7 +28,11 @@ void ShowUser();
 void ShowInfoTeacher(char path[]);//deprecated conversion from string
 void ShowInfoStudent(char path[]);
 
+//Teacher function
+void TeachersOwnCourse(string id);
 
+//Student function
+void StudentsOwnCourse(string id);
 
 //login run
 void StudentMenu(Data d);
@@ -108,8 +112,8 @@ void TakeInf()
     }
     else
     {
-        std::cout << "Error try again\n";
-        Sleep(1000);
+        std::cout << "Press enter to try again\n";
+        getchar();
     }
 
 }
@@ -174,6 +178,7 @@ void StudentMenu(Data s)
             case 1:
                 break;
             case 2:
+                StudentsOwnCourse(s.username);
                 break;
             case 3:
                 break;
@@ -190,8 +195,7 @@ void StudentMenu(Data s)
                 std::cout << "Try agian\n";
                 break;
         }
-
-        system("cls");
+        //system("cls");
     }
     while(1);
 }
@@ -275,6 +279,7 @@ void TeacherMenu(Data d)
                 break;
             case 2:
                 //
+                TeachersOwnCourse(d.username);
                 break;
             case 3:
                 //
@@ -301,7 +306,6 @@ void TeacherMenu(Data d)
                 std::cout << "Try again\n";
                 break;
         }
-        system("cls");
     }
     while(1);
 }
@@ -420,8 +424,104 @@ void ShowInfoStudent(char path[])
 }
 
 
+//teacher function 2.view course
+void TeachersOwnCourse(string id)
+{
+    system("cls");
+
+    ifstream file("data\\course.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string teacher_id;
+    string subject_id;
+    string subject_name;
+    string n_student;
+    string slot;
+    string credit;
+
+    getline (file, teacher_id, ',');
+    getline(file, subject_id, ',');
+    getline(file, subject_name, ',');
+    getline(file, n_student, ',');
+    getline(file, slot, ',');
+    getline(file, credit, '\n');
+
+    int i = 1;
+    while(file.good())
+    {
+        if (teacher_id == id)
+        {
+            std::cout << "STT: " << i << std::endl;
+            std::cout << "Subject ID: " << subject_id << std::endl;
+            std::cout << "Subject Name: " << subject_name << std::endl;
+            std::cout << "Student / Slot: " << n_student << " / "<< slot << std::endl;
+            std::cout << "credit: " << credit << std::endl;
+            std::cout << "-------------------" << '\n';
+
+            i++;
+        }
+
+        getline (file, teacher_id, ',');
+        getline(file, subject_id, ',');
+        getline(file, subject_name, ',');
+        getline(file, n_student, ',');
+        getline(file, slot, ',');
+        getline(file, credit, '\n');
+    }
+
+    file.close();
+}
 
 
+//student function 2.View course
+void StudentsOwnCourse(string id)
+{
+    system("cls");
+
+    ifstream file("data\\object.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string subject_id;
+    string student_id;
+    string teacher_id;
+    string score;
+
+    getline(file, subject_id, ',');
+    getline(file, student_id, ',');
+    getline(file, teacher_id, ',');
+    getline(file, score, '\n');
+
+    int i = 1;
+    while(file.good())
+    {
+        if (student_id == id)
+        {
+            std::cout << "STT: " << i << std::endl;
+            std::cout << "Subject ID: " << subject_id << std::endl;
+            std::cout << "Teacher ID: " << teacher_id << std::endl;
+            std::cout << "Score: " << score << std::endl;
+            std::cout << "-------------------" << '\n';
+            i++;
+        }
+
+        getline(file, subject_id, ',');
+        getline(file, student_id, ',');
+        getline(file, teacher_id, ',');
+        getline(file, score, '\n');
+    }
+
+    file.close();
+}
 
 
 
@@ -448,6 +548,8 @@ void AdminHelpMenu()
 
 void TeacherHelpMenu()
 {
+    system("cls");
+
     cout << "*Change\n\n"
          << "|___ Password             [p]    [passwd]\n\n"
          << "|___ Address              [ca]            \n\n"
@@ -466,10 +568,14 @@ void TeacherHelpMenu()
     cout << "Press enter to continue ......";
 
     getchar();
+
+    system("cls");
 }
 
 void StudentHelpMenu()
 {
+    system("cls");
+
     cout << "*Change Password            [p]    [passwd]  \n\n"
          << "*View all course            [c]             \n\n"
          << "|___View all student        [v]             \n"
@@ -483,7 +589,10 @@ void StudentHelpMenu()
 
     cout << "Press enter to continue ......";
     getchar();
+
+    system("cls");
 }
+
 
 
 
