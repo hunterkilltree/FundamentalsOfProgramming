@@ -1,5 +1,8 @@
 //next time
-//working with admin funtion that will add user
+//working with admin funtion that will delete user
+
+//add user using C not C++
+
 
 #include <windows.h>
 #include <stdio.h>
@@ -27,7 +30,8 @@ Data CheckInf(Data d);
 void ShowUser();
 void ShowInfoTeacher(char path[]);//deprecated conversion from string
 void ShowInfoStudent(char path[]);
-
+void SearchUser();
+void AddUser();
 //Teacher function
 void TeachersOwnCourse(string id);
 
@@ -46,6 +50,10 @@ void TeacherHelpMenu();
 void StudentHelpMenu();
 
 
+//add student
+void AddUser();
+void AddTeacher();
+void AddStudent();
 
 int main()
 {
@@ -228,7 +236,7 @@ void AdminMenu(Data d)
                 //
                 break;
             case 3:
-                //
+                AddUser();
                 break;
             case 4:
                 //
@@ -424,6 +432,145 @@ void ShowInfoStudent(char path[])
 }
 
 
+
+void AddUser()
+{
+    string choice;
+
+    std::cout << "1.Add Student [as] \n";
+    std::cout << "2.Add Teacher [at]\n";
+
+    do
+    {
+        getline(cin, choice);
+
+        if (choice == "1" || choice  == "as")
+        {
+            AddStudent();
+            break;
+        }
+        else if (choice == "2" || choice == "at")
+        {
+            AddTeacher();
+            break;
+        }
+    }
+    while(1);
+}
+
+void AddStudent()
+{
+    system("cls");
+
+    char username[100] = "", name[100] = "",
+         date[50] = "", address[100] = "";
+
+    std::cout << "User name | Name | Date of birth | Address: "  << '\n';
+
+    gets(username);
+    gets(name);
+    gets(date);
+    gets(address);
+
+    FILE *fdata;
+
+    //store in student.csv
+    fdata = fopen("data\\student.csv", "a");
+
+    if (fdata == NULL)
+    {
+        printf("error when opening file");
+        return;
+    }
+
+    fprintf(fdata, "%s", username);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s", name);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s", date);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s\n", address);
+
+    fclose(fdata);
+
+    //store in user.csv
+    fdata = fopen("data\\user.csv", "a");
+
+    if (fdata == NULL)
+    {
+        printf("error when opening file");
+        return;
+    }
+
+    fprintf(fdata, "%s", username);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s", username);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s\n", "student");
+
+    fclose(fdata);
+
+    std::cout << "Create user " << username << "sucess";
+}
+
+void AddTeacher()
+{
+    system("cls");
+
+    char username[100] = "", name[100] = "", phone[100] = "",
+         date[50] = "", address[100] = "";
+
+    std::cout << "User name | Name | Date of birth | Phone | Address: "  << '\n';
+
+    gets(username);
+    gets(name);
+    gets(date);
+    gets(phone);
+    gets(address);
+
+    FILE *fdata;
+
+    //store in teacher.csv
+    fdata = fopen("data\\teacher.csv", "a");
+
+    if (fdata == NULL)
+    {
+        printf("error when opening file");
+        return;
+    }
+
+    fprintf(fdata, "%s", username);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s", name);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s", date);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s", phone);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s\n", address);
+
+    fclose(fdata);
+
+    //store in user.csv
+    fdata = fopen("data\\user.csv", "a");
+
+    if (fdata == NULL)
+    {
+        printf("error when opening file");
+        return;
+    }
+
+    fprintf(fdata, "%s", username);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s", username);
+    fprintf(fdata, ",");
+    fprintf(fdata, "%s\n", "teacher");
+
+    fclose(fdata);
+
+    std::cout << "Create user " << username << "sucess" << std::endl;
+}
+
 //teacher function 2.view course
 void TeachersOwnCourse(string id)
 {
@@ -522,7 +669,6 @@ void StudentsOwnCourse(string id)
 
     file.close();
 }
-
 
 
 //Intruction Menu
