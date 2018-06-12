@@ -1,5 +1,5 @@
 //next time
-//working with admin funtion that will delete user
+
 
 //add user using C not C++
 
@@ -33,12 +33,15 @@ void ShowInfoStudent(char path[]);
 void SearchUser();
 void AddUser();
 
-//Delete function,
+//Delete function,Delete both in their file and user.csv
+void DeleteUser();
+string CheckRole(string);
 void DeleteInfoTeacher(string name);
+void DeleteInfoStudent(string name);
+void DeleteInUser(string name);
+
 void StoreInTemp();
 
-void DeleteTeacher();
-void DeleteUser();
 
 //Teacher function
 void TeachersOwnCourse(string id);
@@ -746,66 +749,6 @@ void StudentHelpMenu()
 }
 
 
-//delete function
-
-void StoreInTemp(string id, string name, string age, string phone, string address)
-{
-    ofstream file("data\\temp.csv",ios::out | ios::app | ios::binary);
-
-    if (!file.is_open())
-    {
-        std::cout << "ERROR: File Open" << '\n';
-        return;
-    }
-
-    file << id << ","  << name << "," << age <<"," << phone << "," << address << "\n";
-
-    file.close();
-}
-
-void DeleteInfoTeacher(string _name)
-{
-    ifstream file("data\\teacher.csv");
-
-    if (!file.is_open())
-    {
-        std::cout << "ERROR: File Open" << '\n';
-        return;
-    }
-
-    string id;
-    string name;
-    string age;
-    string phone;
-    string address;
-
-    getline(file, id, ',');
-    getline(file, name, ',');
-    getline(file, age, ',');
-    getline(file, phone, ',');
-    getline(file, address, '\n');
-
-    while(file.good())
-    {
-        if (id != _name)// data
-        {
-            StoreInTemp(id, name, age, phone, address);
-        }
-
-        getline(file, id, ',');
-        getline(file, name, ',');
-        getline(file, age, ',');
-        getline(file, phone, ',');
-        getline(file, address, '\n');
-    }
-
-    file.close();
-
-    remove( "data\\teacher.csv" );
-    rename("data\\temp.csv", "data\\teacher.csv");
-}
-
-
 
 //change password function
 void StoreInTemp(string id, string name, string role)
@@ -865,42 +808,219 @@ void ChangePassword(Data user)
 }
 
 
+//DeleteUser gets the id  then call the CheckRole
 void DeleteUser()
-{
-    string choice;
-    std::cout << "1.Delete teacher\n";
-    std::cout << "2.Delete student\n";
-    std::cout << "Enter your choice: ";
-    getline(cin, choice);
-
-    do
-    {
-        if(choice == "1")
-        {
-            DeleteTeacher();
-            return;
-        }
-        else if (choice == "2")
-        {
-            return;
-        };
-    }
-    while(1);
-
-}
-
-void DeleteTeacher()
 {
     string name;
     cout << "Enter the ID: ";
     getline(cin, name);
 
-    DeleteInfoTeacher(name);
+    string role;
+
+    role = CheckRole(name);
+    if (role == "")
+    {
+        std::cout << "Not Found\n";
+        return;
+    }
+
+    if (role == "teacher")
+    {
+        DeleteInfoTeacher(name);
+        DeleteInUser(name);
+    }
+    else if (role == "student")
+    {
+        DeleteInfoStudent(name);
+        DeleteInUser(name);
+    }
+
+}
+
+string CheckRole(string _id)
+{
+    ifstream file("data\\user.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return "";
+    }
+
+    string id;
+    string pas;
+    string role;
+
+    getline(file, id, ',');
+    getline(file, pas, ',');
+    getline(file, role, '\n');
+
+    while(file.good())
+    {
+        if (id == _id)
+        {
+            return role;
+        }
+        getline(file, id, ',');
+        getline(file, pas, ',');
+        getline(file, role, '\n');
+    }
+
+    file.close();
+
+    return "";
+}
+
+//delete function,only for teacher
+void StoreInTemp(string id, string name, string age, string phone, string address)
+{
+    ofstream file("data\\temp.csv",ios::out | ios::app | ios::binary);
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    file << id << ","  << name << "," << age <<"," << phone << "," << address << "\n";
+
+    file.close();
+}
+
+void DeleteInfoTeacher(string _name)
+{
+    ifstream file("data\\teacher.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string id;
+    string name;
+    string age;
+    string phone;
+    string address;
+
+    getline(file, id, ',');
+    getline(file, name, ',');
+    getline(file, age, ',');
+    getline(file, phone, ',');
+    getline(file, address, '\n');
+
+    while(file.good())
+    {
+        if (id != _name)// data
+        {
+            StoreInTemp(id, name, age, phone, address);
+        }
+
+        getline(file, id, ',');
+        getline(file, name, ',');
+        getline(file, age, ',');
+        getline(file, phone, ',');
+        getline(file, address, '\n');
+    }
+
+    file.close();
+
+    remove( "data\\teacher.csv" );
+    rename("data\\temp.csv", "data\\teacher.csv");
+}
+
+//delete functuon, only for student
+void StoreInTemp(string id, string name, string age, string address)
+{
+    ofstream file("data\\temp.csv",ios::out | ios::app | ios::binary);
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    file << id << ","  << name << "," << age << "," << address << "\n";
+
+    file.close();
+}
+
+void DeleteInfoStudent(string _name)
+{
+    ifstream file("data\\student.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string id;
+    string name;
+    string age;
+    string address;
+
+    getline(file, id, ',');
+    getline(file, name, ',');
+    getline(file, age, ',');
+    getline(file, address, '\n');
+
+    while(file.good())
+    {
+        if (id != _name)// data
+        {
+            StoreInTemp(id, name, age, address);
+        }
+
+        getline(file, id, ',');
+        getline(file, name, ',');
+        getline(file, age, ',');
+        getline(file, address, '\n');
+    }
+
+    file.close();
+
+    remove( "data\\student.csv" );
+    rename("data\\temp.csv", "data\\student.csv");
 }
 
 
+void DeleteInUser(string _name)
+{
+    ifstream file("data\\user.csv");
 
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
 
+    string id;
+    string pas;
+    string role;
 
+    getline(file, id, ',');
+    getline(file, pas, ',');
+    getline(file, role, '\n');
 
+    while(file.good())
+    {
+        if (id != _name)
+        {
+
+            StoreInTemp(id, pas, role);
+
+        }
+
+        getline(file, id, ',');
+        getline(file, pas, ',');
+        getline(file, role, '\n');
+    }
+
+    file.close();
+
+    remove("data\\user.csv");
+    rename("data\\temp.csv", "data\\user.csv");
+
+}
 
