@@ -32,6 +32,14 @@ void ShowInfoTeacher(char path[]);//deprecated conversion from string
 void ShowInfoStudent(char path[]);
 void SearchUser();
 void AddUser();
+
+//Delete function,
+void DeleteInfoTeacher(string name);
+void StoreInTemp();
+
+void DeleteTeacher();
+void DeleteUser();
+
 //Teacher function
 void TeachersOwnCourse(string id);
 
@@ -55,35 +63,29 @@ void AddUser();
 void AddTeacher();
 void AddStudent();
 
+
+//change password
+void ChangePassword(Data d);
+void StoreInMain(string, string, string);
+
 int main()
 {
     int choose = 0;
 
     do
     {
-        std::cout << "1. Sign in\n2. Sign up\n0. Exit\n";
+        std::cout << "1. Sign in\n2. Exit\n";
         std::cout << "Your number: ";
         std::cin >> choose;
         getchar();
 
-        if (choose == 0)
+        if (choose == 2)
             return 0;
 
-        if (choose == 1)
+        else if (choose == 1)
         {
-            //(1)
             TakeInf();
         }
-        else if (choose == 2)
-        {
-            //(2)
-        }
-        else
-        {
-            std::cout << "Try agian\n";
-        }
-
-        system("cls");
     }
     while(1);
 
@@ -184,6 +186,7 @@ void StudentMenu(Data s)
         switch(num)
         {
             case 1:
+                ChangePassword(s);
                 break;
             case 2:
                 StudentsOwnCourse(s.username);
@@ -208,7 +211,6 @@ void StudentMenu(Data s)
     while(1);
 }
 
-//Code of VO Dong Ho
 void AdminMenu(Data d)
 {
     int num = 0;
@@ -221,7 +223,8 @@ void AdminMenu(Data d)
                   << "4. Delete User [dt] [ds]  \n"
                   << "5. Logout [l]             \n"
                   << "6. Exit [q]               \n"
-                  << "7. Help?? [h]             \n" << std::endl;
+                  << "7. Help?? [h]             \n"
+                  << "8. Change Password        \n" << std::endl;
 
         std::cout << "Your number : ";
         std::cin >> num;;
@@ -240,6 +243,7 @@ void AdminMenu(Data d)
                 break;
             case 4:
                 //
+                DeleteUser();
                 break;
             case 5:
                 //
@@ -249,6 +253,9 @@ void AdminMenu(Data d)
                 exit(0);
             case 7:
                 AdminHelpMenu();
+                break;
+            case 8:
+                ChangePassword(d);
                 break;
             default:
                 std::cout << "try again\n";
@@ -284,6 +291,7 @@ void TeacherMenu(Data d)
         {
             case 1:
                 //
+                ChangePassword(d);
                 break;
             case 2:
                 //
@@ -317,7 +325,7 @@ void TeacherMenu(Data d)
     }
     while(1);
 }
-//above
+
 
 //admin function
 void ShowUser()
@@ -432,7 +440,7 @@ void ShowInfoStudent(char path[])
 }
 
 
-
+//AddUser call Addteacher or AddStudent
 void AddUser()
 {
     string choice;
@@ -510,7 +518,7 @@ void AddStudent()
 
     fclose(fdata);
 
-    std::cout << "Create user " << username << "sucess";
+    std::cout << "Create user " << username << " sucess\n";
 }
 
 void AddTeacher()
@@ -722,7 +730,7 @@ void StudentHelpMenu()
 {
     system("cls");
 
-    cout << "*Change Password            [p]    [passwd]  \n\n"
+    std::cout << "*Change Password            [p]    [passwd]  \n\n"
          << "*View all course            [c]             \n\n"
          << "|___View all student        [v]             \n"
          << "    in course                               \n\n"
@@ -733,10 +741,161 @@ void StudentHelpMenu()
          << "*Join course                [j]    [jc]      \n\n"
          << "*Summarize score            [s]    [sum]     \n\n";
 
-    cout << "Press enter to continue ......";
+    std::cout << "Press enter to continue ......";
     getchar();
+}
 
-    system("cls");
+
+//delete function
+
+void StoreInTemp(string id, string name, string age, string phone, string address)
+{
+    ofstream file("data\\temp.csv",ios::out | ios::app | ios::binary);
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    file << id << ","  << name << "," << age <<"," << phone << "," << address << "\n";
+
+    file.close();
+}
+
+void DeleteInfoTeacher(string _name)
+{
+    ifstream file("data\\teacher.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string id;
+    string name;
+    string age;
+    string phone;
+    string address;
+
+    getline(file, id, ',');
+    getline(file, name, ',');
+    getline(file, age, ',');
+    getline(file, phone, ',');
+    getline(file, address, '\n');
+
+    while(file.good())
+    {
+        if (id != _name)// data
+        {
+            StoreInTemp(id, name, age, phone, address);
+        }
+
+        getline(file, id, ',');
+        getline(file, name, ',');
+        getline(file, age, ',');
+        getline(file, phone, ',');
+        getline(file, address, '\n');
+    }
+
+    file.close();
+
+    remove( "data\\teacher.csv" );
+    rename("data\\temp.csv", "data\\teacher.csv");
+}
+
+
+
+//change password function
+void StoreInTemp(string id, string name, string role)
+{
+    ofstream file("data\\temp.csv",ios::out | ios::app | ios::binary);
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    file << id << ","  << name << "," << role <<"\n";
+
+    file.close();
+}
+
+void ChangePassword(Data user)
+{
+    ifstream f("data\\user.csv");
+
+    string id ;
+    string password;
+    string role;
+
+    if (!f.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string newpassword;
+
+    std::cout << "Your new password: ";
+    getline(cin, newpassword);
+
+    while(f.good())
+    {
+        getline(f, id , ',');
+        getline(f, password, ',');
+        getline(f, role, '\n');
+
+        if (id == user.username )
+        {
+            password = newpassword;
+        }
+
+        StoreInTemp(id, password, role);
+    }
+
+    f.close();
+
+    //remove and rename file user after changing
+    remove("data\\user.csv");
+    rename("data\\temp.csv", "data\\user.csv");
+
+}
+
+
+void DeleteUser()
+{
+    string choice;
+    std::cout << "1.Delete teacher\n";
+    std::cout << "2.Delete student\n";
+    std::cout << "Enter your choice: ";
+    getline(cin, choice);
+
+    do
+    {
+        if(choice == "1")
+        {
+            DeleteTeacher();
+            return;
+        }
+        else if (choice == "2")
+        {
+            return;
+        };
+    }
+    while(1);
+
+}
+
+void DeleteTeacher()
+{
+    string name;
+    cout << "Enter the ID: ";
+    getline(cin, name);
+
+    DeleteInfoTeacher(name);
 }
 
 
