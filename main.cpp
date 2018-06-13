@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 
 #include <fstream>// ifstream
@@ -45,6 +46,8 @@ void StoreInTemp();
 
 //Teacher function
 void TeachersOwnCourse(string id);
+void SearchCoursesByName();
+void SearchCoursesName(string temp);
 
 //Student function
 void StudentsOwnCourse(string id);
@@ -70,6 +73,23 @@ void AddStudent();
 //change password
 void ChangePassword(Data d);
 void StoreInMain(string, string, string);
+
+//Admin Search
+void SearchUser();
+void SearchByName();
+void SearchName(string temp);
+
+void SearchByAddress();
+void SearchAddress(string temp);
+
+void SearchByPhone();
+void SearchPhone(string temp);
+
+
+//Join Course
+void JoinCourseByID();
+void JoinCourseID(string temp);
+void StoreInTemp(string teacher_id, string subject_id, string subject_name, int n_student, string slot, string credit);
 
 int main()
 {
@@ -195,8 +215,10 @@ void StudentMenu(Data s)
                 StudentsOwnCourse(s.username);
                 break;
             case 3:
+                SearchCoursesByName();
                 break;
             case 4:
+                JoinCourseByID();//after Search take the id of course
                 break;
             case 5: //logout
                 return;
@@ -240,6 +262,7 @@ void AdminMenu(Data d)
                 break;
             case 2:
                 //
+                SearchUser();
                 break;
             case 3:
                 AddUser();
@@ -293,15 +316,13 @@ void TeacherMenu(Data d)
         switch(num)
         {
             case 1:
-                //
                 ChangePassword(d);
                 break;
             case 2:
-                //
                 TeachersOwnCourse(d.username);
                 break;
             case 3:
-                //
+                SearchCoursesByName();
                 break;
             case 4:
                 //
@@ -582,7 +603,7 @@ void AddTeacher()
     std::cout << "Create user " << username << "sucess" << std::endl;
 }
 
-//teacher function 2.view course
+//teacher function
 void TeachersOwnCourse(string id)
 {
     system("cls");
@@ -1024,3 +1045,409 @@ void DeleteInUser(string _name)
 
 }
 
+//Search in Admin
+void SearchUser()
+{
+    std::string choice;
+
+    do
+    {
+        std::cout << "1.Search by name \n";
+        std::cout << "2.Search by phone \n";
+        std::cout << "3.Search by address \n";
+
+        std::getline(std::cin, choice);
+
+        if (choice == "1")
+        {
+            SearchByName();
+            break;
+        }
+        else if (choice == "2")
+        {
+            SearchByPhone();
+            break;
+        }
+        else if (choice == "3")
+        {
+            SearchByAddress();
+            break;
+        }
+        else
+        {
+            std::cout <<"Try Agian : ";
+        }
+
+        std::cout << endl;
+    }
+    while(1);
+}
+
+void SearchByName()
+{
+    std::string name;
+
+    std::cout << "Enter your keyword: ";
+    std::getline(std::cin, name);
+    SearchName(name);
+}
+
+void SearchName(string temp)
+{
+    ifstream file("data\\teacher.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string id;
+    string name;
+    string age;
+    string phone;
+    string address;
+
+    getline(file, id, ',');
+    getline(file, name, ',');
+    getline(file, age, ',');
+    getline(file, phone, ',');
+    getline(file, address, '\n');
+
+    int found;
+    while(file.good())
+    {
+        found = name.find(temp);
+        if (found != -1)
+        {
+            std::cout << "id: " << id << std::endl;
+            std::cout << "name: " << name << std::endl;
+            std::cout << "birth: " << age << std::endl;
+            std::cout << "phone: " << phone << std::endl;
+            std::cout << "address: " << address << std::endl;
+            std::cout << "-------------------" << '\n';
+        }
+
+        getline(file, id, ',');
+        getline(file, name, ',');
+        getline(file, age, ',');
+        getline(file, phone, ',');
+        getline(file, address, '\n');
+    }
+
+    file.close();
+
+    ifstream file_2("data\\student.csv");
+    if (!file_2.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    getline(file_2, id, ',');
+    getline(file_2, name, ',');
+    getline(file_2, age, ',');
+    getline(file_2, address, '\n');
+
+    while(file_2.good())
+    {
+        found = name.find(temp);
+
+        if (found != -1)
+        {
+            std::cout << "id: " << id << std::endl;
+            std::cout << "name: " << name << std::endl;
+            std::cout << "birth: " << age << std::endl;
+            std::cout << "address: " << address << std::endl;
+            std::cout << "-------------------" << '\n';
+        }
+
+        getline(file_2, id, ',');
+        getline(file_2, name, ',');
+        getline(file_2, age, ',');
+        getline(file_2, address, '\n');
+    }
+
+    file_2.close();
+}
+
+void SearchByPhone()
+{
+    std::string phone;
+
+    std::cout << "Enter your keyword: ";
+    std::getline(std::cin, phone);
+    SearchPhone(phone);
+
+}
+
+void SearchPhone(string temp)
+{
+    ifstream file("data\\teacher.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string id;
+    string name;
+    string age;
+    string phone;
+    string address;
+
+    getline(file, id, ',');
+    getline(file, name, ',');
+    getline(file, age, ',');
+    getline(file, phone, ',');
+    getline(file, address, '\n');
+
+    int found;
+    while(file.good())
+    {
+        found = phone.find(temp);
+        if (found != -1)
+        {
+            std::cout << "id: " << id << std::endl;
+            std::cout << "name: " << name << std::endl;
+            std::cout << "birth: " << age << std::endl;
+            std::cout << "phone: " << phone << std::endl;
+            std::cout << "address: " << address << std::endl;
+            std::cout << "-------------------" << '\n';
+        }
+
+        getline(file, id, ',');
+        getline(file, name, ',');
+        getline(file, age, ',');
+        getline(file, phone, ',');
+        getline(file, address, '\n');
+    }
+
+    file.close();
+}
+
+void SearchByAddress()
+{
+    std::string address;
+
+    std::cout << "Enter your keyword: ";
+    std::getline(std::cin, address);
+
+    SearchAddress(address);
+}
+
+void SearchAddress(string temp)
+{
+    ifstream file("data\\teacher.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string id;
+    string name;
+    string age;
+    string phone;
+    string address;
+
+    getline(file, id, ',');
+    getline(file, name, ',');
+    getline(file, age, ',');
+    getline(file, phone, ',');
+    getline(file, address, '\n');
+
+    int found;
+    while(file.good())
+    {
+        found = address.find(temp);
+        if (found != -1)
+        {
+            std::cout << "id: " << id << std::endl;
+            std::cout << "name: " << name << std::endl;
+            std::cout << "birth: " << age << std::endl;
+            std::cout << "phone: " << phone << std::endl;
+            std::cout << "address: " << address << std::endl;
+            std::cout << "-------------------" << '\n';
+        }
+
+        getline(file, id, ',');
+        getline(file, name, ',');
+        getline(file, age, ',');
+        getline(file, phone, ',');
+        getline(file, address, '\n');
+    }
+
+    file.close();
+
+    ifstream file_2("data\\student.csv");
+    if (!file_2.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    getline(file_2, id, ',');
+    getline(file_2, name, ',');
+    getline(file_2, age, ',');
+    getline(file_2, address, '\n');
+
+    while(file_2.good())
+    {
+        found = address.find(temp);
+
+        if (found != -1)
+        {
+            std::cout << "id: " << id << std::endl;
+            std::cout << "name: " << name << std::endl;
+            std::cout << "birth: " << age << std::endl;
+            std::cout << "address: " << address << std::endl;
+            std::cout << "-------------------" << '\n';
+        }
+
+        getline(file_2, id, ',');
+        getline(file_2, name, ',');
+        getline(file_2, age, ',');
+        getline(file_2, address, '\n');
+    }
+
+    file_2.close();
+}
+
+//function for Teacher and Student
+void SearchCoursesByName()
+{
+    string name;
+    std::cout << "Enter the name : ";
+    getline(cin , name);
+
+    SearchCoursesName(name);
+
+}
+
+void SearchCoursesName(string temp)
+{
+    //system("cls");
+
+    ifstream file("data\\course.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string teacher_id;
+    string subject_id;
+    string subject_name;
+    string n_student;
+    string slot;
+    string credit;
+
+    getline(file, teacher_id, ',');
+    getline(file, subject_id, ',');
+    getline(file, subject_name, ',');
+    getline(file, n_student, ',');
+    getline(file, slot, ',');
+    getline(file, credit, '\n');
+
+    int i = 1;
+    int found ;
+    while(file.good())
+    {
+        found = subject_name.find(temp);
+        if (found != -1)
+        {
+            std::cout << "STT: " << i << std::endl;
+            std::cout << "Subject ID: " << subject_id << std::endl;
+            std::cout << "Subject Name: " << subject_name << std::endl;
+            std::cout << "Student / Slot: " << n_student << " / "<< slot << std::endl;
+            std::cout << "credit: " << credit << std::endl;
+            std::cout << "-------------------" << '\n';
+
+            i++;
+        }
+
+        getline(file, teacher_id, ',');
+        getline(file, subject_id, ',');
+        getline(file, subject_name, ',');
+        getline(file, n_student, ',');
+        getline(file, slot, ',');
+        getline(file, credit, '\n');
+    }
+
+    file.close();
+}
+
+//Function for student
+void JoinCourseByID()
+{
+    std::string id;
+    std::cout << "Enter course ID: ";
+    std::getline(std::cin, id);
+
+    JoinCourseID(id);
+
+    std::cout << "Join Course Succeed\n";
+}
+
+void JoinCourseID(string id)
+{
+    ifstream file("data\\course.csv");
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    string teacher_id;
+    string subject_id;
+    string subject_name;
+    string n_student;
+    string slot;
+    string credit;
+    int x = 0;
+
+    while(file.good())
+    {
+        getline(file, teacher_id, ',');
+        getline(file, subject_id, ',');
+        getline(file, subject_name, ',');
+        getline(file, n_student, ',');
+        getline(file, slot, ',');
+        getline(file, credit, '\n');
+
+        if (id == subject_id)
+        {
+            stringstream num(n_student);
+            num >> x;
+
+            x = x + 1;
+        }
+
+        StoreInTemp(teacher_id, subject_id, subject_name, x, slot, credit);
+    }
+
+    file.close();
+
+    remove("data\\course.csv");
+    rename("data\\temp.csv", "data\\course.csv");
+}
+
+void StoreInTemp(string teacher_id, string subject_id, string subject_name, int n_student, string slot, string credit)
+{
+    ofstream file("data\\temp.csv",ios::out | ios::app | ios::binary);
+
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: File Open" << '\n';
+        return;
+    }
+
+    file << teacher_id << ","  << subject_id << "," << subject_name << "," << n_student << "," << slot << "," << credit << "\n";
+
+    file.close();
+}
